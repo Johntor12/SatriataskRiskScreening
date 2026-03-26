@@ -36,8 +36,8 @@ export function Collections() {
   const archived = collections.filter(c => c.status === 'archived');
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-start justify-between">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div>
           <h1 style={{ fontFamily: 'var(--text-h1-family)', fontSize: 'var(--text-h1-size)', color: 'var(--foreground)' }}>
             Collections
@@ -48,7 +48,7 @@ export function Collections() {
         </div>
         <button
           onClick={() => setShowCreate(s => !s)}
-          className="flex items-center gap-2 px-3 py-2 rounded"
+          className="flex items-center gap-2 px-3 py-2 rounded shrink-0"
           style={{ background: 'var(--primary)', borderRadius: 'var(--radius)', color: 'white' }}
         >
           <Plus size={14} />
@@ -65,7 +65,7 @@ export function Collections() {
           <h4 style={{ fontFamily: 'var(--text-h4-family)', fontSize: 'var(--text-h4-size)', color: 'var(--foreground)' }}>
             Create New Collection
           </h4>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="caption block mb-1" style={{ color: 'var(--muted-foreground)' }}>Collection Name *</label>
               <input
@@ -147,17 +147,17 @@ export function Collections() {
                 onClick={() => setExpandedCol(isExpanded ? null : col.id)}
                 className="w-full flex items-center justify-between p-4 text-left"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="w-3 h-3 rounded-full shrink-0"
                     style={{ background: col.color }}
                   />
-                  <div>
+                  <div className="min-w-0">
                     <div style={{ fontFamily: 'var(--text-h3-family)', fontSize: 'var(--text-h3-size)', color: 'var(--foreground)' }}>
                       {col.name}
                     </div>
                     {col.description && (
-                      <div className="caption mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+                      <div className="caption mt-0.5 truncate" style={{ color: 'var(--muted-foreground)' }}>
                         {col.description}
                       </div>
                     )}
@@ -165,7 +165,7 @@ export function Collections() {
                 </div>
 
                 {/* Summary stats */}
-                <div className="flex items-center gap-6 mr-4">
+                <div className="hidden sm:flex items-center gap-4 md:gap-6 mr-4 shrink-0">
                   <div className="text-right">
                     <div className="caption" style={{ color: 'var(--muted-foreground)' }}>Companies</div>
                     <div style={{ fontFamily: 'var(--text-p-family)', fontSize: '15px', color: 'var(--foreground)', fontWeight: 500 }}>
@@ -185,7 +185,7 @@ export function Collections() {
                     </div>
                   </div>
                   {topRisk && (
-                    <div className="text-right">
+                    <div className="text-right hidden md:block">
                       <div className="caption" style={{ color: 'var(--muted-foreground)' }}>Highest Risk</div>
                       <div className="caption" style={{ color: getRiskColor(topRisk.riskTier), fontWeight: 500 }}>
                         {topRisk.ticker} ({topRisk.riskScore})
@@ -194,7 +194,12 @@ export function Collections() {
                   )}
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Mobile: just show count */}
+                <div className="flex sm:hidden items-center gap-2 mr-2 shrink-0">
+                  <span className="caption" style={{ color: 'var(--muted-foreground)' }}>{companies.length} co.</span>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
                   <span className="caption" style={{ color: 'var(--muted-foreground)' }}>
                     {isExpanded ? '▲' : '▼'}
                   </span>
@@ -215,14 +220,14 @@ export function Collections() {
                         return (
                           <div
                             key={company.id}
-                            className="flex items-center gap-4 px-4 py-3 border-b"
+                            className="flex items-center gap-3 md:gap-4 px-4 py-3 border-b"
                             style={{ borderColor: 'var(--border)' }}
                           >
-                            <span className="caption w-5 text-center" style={{ color: 'var(--muted-foreground)' }}>
+                            <span className="caption w-5 text-center shrink-0" style={{ color: 'var(--muted-foreground)' }}>
                               {idx + 1}
                             </span>
                             <div
-                              className="w-10 h-10 rounded flex items-center justify-center shrink-0"
+                              className="w-9 h-9 md:w-10 md:h-10 rounded flex items-center justify-center shrink-0"
                               style={{ background: `${getRiskColor(company.riskTier)}22`, border: `1px solid ${getRiskColor(company.riskTier)}44`, borderRadius: 'var(--radius)' }}
                             >
                               <span style={{ fontFamily: 'var(--text-p-family)', fontSize: '13px', color: getRiskColor(company.riskTier), fontWeight: 500 }}>
@@ -230,7 +235,7 @@ export function Collections() {
                               </span>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2 flex-wrap">
                                 <span style={{ fontFamily: 'var(--text-p-family)', fontSize: '14px', color: 'var(--foreground)', fontWeight: 500 }}>
                                   {company.ticker}
                                 </span>
@@ -240,7 +245,7 @@ export function Collections() {
                                 {company.name} · {company.sector}
                               </div>
                             </div>
-                            <div className="flex items-center gap-6">
+                            <div className="hidden sm:flex items-center gap-4 md:gap-6">
                               <div>
                                 <div className="caption" style={{ color: 'var(--muted-foreground)' }}>ETR</div>
                                 <div className="caption" style={{ color: lastFY.etr < 15 ? 'var(--destructive)' : 'var(--foreground)', fontWeight: 500 }}>
@@ -262,10 +267,10 @@ export function Collections() {
                             </div>
                             <button
                               onClick={() => navigate(`/company/${company.id}`)}
-                              className="flex items-center gap-1.5 caption px-3 py-1.5 rounded"
+                              className="flex items-center gap-1.5 caption px-2.5 md:px-3 py-1.5 rounded shrink-0"
                               style={{ background: 'var(--input-background)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--muted-foreground)' }}
                             >
-                              <ArrowUpRight size={12} /> View
+                              <ArrowUpRight size={12} /> <span className="hidden sm:inline">View</span>
                             </button>
                           </div>
                         );
@@ -274,7 +279,7 @@ export function Collections() {
                   )}
 
                   {/* Collection actions */}
-                  <div className="flex items-center justify-between px-4 py-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 py-3 gap-2">
                     <div className="flex items-center gap-2">
                       <button
                         className="flex items-center gap-1.5 caption px-3 py-1.5 rounded"

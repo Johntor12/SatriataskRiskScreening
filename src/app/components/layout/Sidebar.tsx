@@ -5,8 +5,7 @@ import {
   FolderOpen,
   Bell,
   Shield,
-  ChevronRight,
-  AlertTriangle,
+  X,
 } from 'lucide-react';
 import { MOCK_COMPANIES, MOCK_COLLECTIONS } from '../../data/mockData';
 
@@ -17,7 +16,11 @@ const navItems = [
   { to: '/alerts', label: 'Alerts', icon: Bell },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+export function Sidebar({ onClose }: SidebarProps) {
   const location = useLocation();
   const watchlistCount = MOCK_COMPANIES.filter(c => c.isWatchlisted).length;
   const alertCount = MOCK_COMPANIES.reduce((sum, c) => sum + c.alerts.length, 0);
@@ -28,21 +31,33 @@ export function Sidebar() {
       style={{ background: 'var(--sidebar)', borderColor: 'var(--sidebar-border)' }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b" style={{ borderColor: 'var(--sidebar-border)' }}>
-        <div
-          className="flex items-center justify-center w-8 h-8 rounded"
-          style={{ background: 'var(--primary)', borderRadius: 'var(--radius)' }}
-        >
-          <Shield size={16} color="white" />
-        </div>
-        <div>
-          <div style={{ fontFamily: 'var(--text-h3-family)', fontSize: 'var(--text-h3-size)', color: 'var(--foreground)', fontWeight: 500, letterSpacing: '0.06em' }}>
-            SATRIA
+      <div className="flex items-center justify-between px-5 py-5 border-b" style={{ borderColor: 'var(--sidebar-border)' }}>
+        <div className="flex items-center gap-2.5">
+          <div
+            className="flex items-center justify-center w-8 h-8 rounded"
+            style={{ background: 'var(--primary)', borderRadius: 'var(--radius)' }}
+          >
+            <Shield size={16} color="white" />
           </div>
-          <div className="caption" style={{ color: 'var(--sidebar-foreground)', lineHeight: 1 }}>
-            Tax Risk Screening
+          <div>
+            <div style={{ fontFamily: 'var(--text-h3-family)', fontSize: 'var(--text-h3-size)', color: 'var(--foreground)', fontWeight: 500, letterSpacing: '0.06em' }}>
+              SATRIA
+            </div>
+            <div className="caption" style={{ color: 'var(--sidebar-foreground)', lineHeight: 1 }}>
+              Tax Risk Screening
+            </div>
           </div>
         </div>
+        {/* Close button — only shown on mobile */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-1 rounded md:hidden"
+            style={{ color: 'var(--sidebar-foreground)', borderRadius: 'var(--radius)' }}
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
 
       {/* Navigation */}
@@ -56,6 +71,7 @@ export function Sidebar() {
             <NavLink
               key={to}
               to={to}
+              onClick={onClose}
               className="flex items-center justify-between gap-2.5 px-2.5 py-2 rounded transition-colors group"
               style={{
                 borderRadius: 'var(--radius)',
@@ -94,6 +110,7 @@ export function Sidebar() {
             <NavLink
               key={col.id}
               to={`/collections`}
+              onClick={onClose}
               className="flex items-center gap-2 px-2.5 py-1.5 rounded transition-colors"
               style={{ borderRadius: 'var(--radius)', color: 'var(--sidebar-foreground)' }}
             >

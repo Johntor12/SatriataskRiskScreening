@@ -17,7 +17,7 @@ export function Alerts() {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div>
         <h1 style={{ fontFamily: 'var(--text-h1-family)', fontSize: 'var(--text-h1-size)', color: 'var(--foreground)' }}>
           Alerts
@@ -44,26 +44,26 @@ export function Alerts() {
               <button
                 key={i}
                 onClick={() => navigate(`/company/${company.id}`)}
-                className="w-full flex items-center gap-4 px-4 py-3 border-b text-left hover:bg-white/[0.03] transition-colors"
+                className="w-full flex items-center gap-3 md:gap-4 px-4 py-3 border-b text-left hover:bg-white/[0.03] transition-colors"
                 style={{ borderColor: 'var(--border)' }}
               >
                 <div
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{ background: 'var(--destructive)' }}
                 />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-0.5">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                     <span style={{ fontFamily: 'var(--text-p-family)', fontSize: '13px', color: 'var(--accent)', fontWeight: 500 }}>
                       {company.ticker}
                     </span>
                     <RiskBadge tier={company.riskTier} size="sm" />
-                    <span className="caption" style={{ color: 'var(--muted-foreground)' }}>{company.sector}</span>
+                    <span className="caption hidden sm:inline" style={{ color: 'var(--muted-foreground)' }}>{company.sector}</span>
                   </div>
                   <div style={{ fontFamily: 'var(--text-p-family)', fontSize: '14px', color: 'var(--foreground)' }}>
                     {alert}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 md:gap-3 shrink-0">
                   <span
                     style={{ fontFamily: 'var(--text-h2-family)', fontSize: '18px', color: getRiskColor(company.riskTier) }}
                   >

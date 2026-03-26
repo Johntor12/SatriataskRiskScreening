@@ -14,8 +14,8 @@ export function Watchlist() {
   const watchlisted = MOCK_COMPANIES.filter(c => c.isWatchlisted);
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-start justify-between">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div>
           <h1 style={{ fontFamily: 'var(--text-h1-family)', fontSize: 'var(--text-h1-size)', color: 'var(--foreground)' }}>
             Watchlist
@@ -48,12 +48,14 @@ export function Watchlist() {
                 className="p-4 rounded-xl border"
                 style={{ background: 'var(--card)', borderColor: 'var(--border)', borderRadius: 'var(--radius-card)' }}
               >
-                <div className="flex items-start gap-4">
-                  <RiskGauge score={company.riskScore} size={72} />
+                <div className="flex flex-col sm:flex-row items-start gap-4">
+                  <div className="hidden sm:block shrink-0">
+                    <RiskGauge score={company.riskScore} size={72} />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <div>
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <Star size={12} fill="var(--primary)" color="var(--primary)" />
                           <span style={{ fontFamily: 'var(--text-label-family)', fontSize: 'var(--text-label-size)', color: 'var(--accent)', fontWeight: 500 }}>
                             {company.ticker}
@@ -71,19 +73,19 @@ export function Watchlist() {
                           {company.sector} · ETR: {lastFY.etr.toFixed(1)}% · Risk score: {company.riskScore}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 ml-4">
+                      <div className="flex items-center gap-2 ml-4 shrink-0">
                         <button
                           onClick={() => navigate(`/company/${company.id}`)}
                           className="flex items-center gap-1.5 caption px-3 py-1.5 rounded"
                           style={{ background: 'var(--input-background)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--muted-foreground)' }}
                         >
-                          <ArrowUpRight size={12} /> View detail
+                          <ArrowUpRight size={12} /> <span className="hidden sm:inline">View detail</span><span className="sm:hidden">View</span>
                         </button>
                       </div>
                     </div>
 
                     {/* Key signals row */}
-                    <div className="flex gap-4 mt-3 pt-3 border-t" style={{ borderColor: 'var(--border)' }}>
+                    <div className="flex flex-wrap gap-x-4 gap-y-2 mt-3 pt-3 border-t" style={{ borderColor: 'var(--border)' }}>
                       {[
                         { label: 'ETR', val: `${lastFY.etr.toFixed(1)}%`, alert: lastFY.etr < 15 },
                         { label: 'DE Ratio', val: `${lastFY.deRatio.toFixed(1)}x`, alert: lastFY.deRatio > 4 },

@@ -118,7 +118,7 @@ export function CompanyDetail() {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Back + Header */}
       <div>
         <button
@@ -129,7 +129,7 @@ export function CompanyDetail() {
           <ArrowLeft size={14} /> Back to Triage Dashboard
         </button>
 
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
           <div className="flex items-start gap-4">
             <RiskGauge score={company.riskScore} size={88} />
             <div>
@@ -176,7 +176,7 @@ export function CompanyDetail() {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 lg:shrink-0">
             <button
               onClick={() => setIsWatchlisted(w => !w)}
               className="flex items-center gap-2 px-3 py-2 rounded"
@@ -196,7 +196,7 @@ export function CompanyDetail() {
 
       {/* Alerts */}
       {company.alerts.length > 0 && (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {company.alerts.map((alert, i) => (
             <div
               key={i}
@@ -218,7 +218,7 @@ export function CompanyDetail() {
         <h3 style={{ fontFamily: 'var(--text-h3-family)', fontSize: 'var(--text-h3-size)', color: 'var(--foreground)', marginBottom: '12px' }}>
           Risk Score Components
         </h3>
-        <div className="grid grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {Object.entries(company.signals).map(([key, val]) => {
             const color = val >= 70 ? 'var(--destructive)' : val >= 40 ? '#D4A017' : 'var(--accent)';
             const weight = SIGNAL_WEIGHTS[key] ?? 0;
@@ -243,12 +243,12 @@ export function CompanyDetail() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-0 border-b" style={{ borderColor: 'var(--border)' }}>
+      <div className="flex gap-0 border-b overflow-x-auto" style={{ borderColor: 'var(--border)' }}>
         {tabs.map(tab => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className="px-4 py-2.5 relative"
+            className="px-4 py-2.5 relative whitespace-nowrap"
             style={{
               fontFamily: 'var(--text-p-family)',
               fontSize: 'var(--text-p-size)',
@@ -266,7 +266,7 @@ export function CompanyDetail() {
       {activeTab === 'financial' && (
         <div className="space-y-4">
           {/* Key Metrics Row */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
               { label: 'ETR (2023)', value: `${lastFY.etr.toFixed(1)}%`, sub: `${etrGap > 0 ? '-' : '+'}${Math.abs(etrGap).toFixed(1)}pp vs statutory 22%`, alert: etrGap > 5 },
               { label: 'Net Margin (2023)', value: `${lastFY.netMargin.toFixed(1)}%`, sub: `Z-score: ${company.zScore.toFixed(1)} vs sector peers`, alert: company.zScore < -2 },
@@ -295,7 +295,7 @@ export function CompanyDetail() {
           </div>
 
           {/* ETR Chart */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div
               className="p-4 rounded-xl border"
               style={{ background: 'var(--card)', borderColor: 'var(--border)', borderRadius: 'var(--radius-card)' }}
@@ -355,10 +355,10 @@ export function CompanyDetail() {
           </div>
 
           {/* RP Breakdown + Financial Table */}
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
             {/* RP Donut */}
             <div
-              className="col-span-2 p-4 rounded-xl border"
+              className="lg:col-span-2 p-4 rounded-xl border"
               style={{ background: 'var(--card)', borderColor: 'var(--border)', borderRadius: 'var(--radius-card)' }}
             >
               <h4 style={{ fontFamily: 'var(--text-h4-family)', fontSize: 'var(--text-h4-size)', color: 'var(--foreground)', marginBottom: '4px' }}>
@@ -410,7 +410,7 @@ export function CompanyDetail() {
 
             {/* F-09 Financial Table */}
             <div
-              className="col-span-3 p-4 rounded-xl border"
+              className="lg:col-span-3 p-4 rounded-xl border"
               style={{ background: 'var(--card)', borderColor: 'var(--border)', borderRadius: 'var(--radius-card)' }}
             >
               <h4 style={{ fontFamily: 'var(--text-h4-family)', fontSize: 'var(--text-h4-size)', color: 'var(--foreground)', marginBottom: '12px' }}>
@@ -472,7 +472,7 @@ export function CompanyDetail() {
               <h4 style={{ fontFamily: 'var(--text-h4-family)', fontSize: 'var(--text-h4-size)', color: 'var(--foreground)', marginBottom: '8px' }}>
                 F-13 · Implied RP Loan Interest Rate Calculator
               </h4>
-              <div className="flex items-center gap-8">
+              <div className="flex flex-wrap items-start gap-4 md:gap-8">
                 <div>
                   <div className="caption" style={{ color: 'var(--muted-foreground)' }}>Implied RP Rate</div>
                   <div style={{ fontFamily: 'var(--text-h2-family)', fontSize: '24px', color: company.impliedRPRate > company.biRate * 2 ? 'var(--destructive)' : 'var(--foreground)' }}>
@@ -541,7 +541,7 @@ export function CompanyDetail() {
           </div>
 
           {/* F-17 Tax Haven + F-14 Mystery Entities */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div
               className="p-4 rounded-xl border"
               style={{ background: 'var(--card)', borderColor: 'var(--border)', borderRadius: 'var(--radius-card)' }}
@@ -819,7 +819,7 @@ export function CompanyDetail() {
                     style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-input)', color: 'var(--foreground)' }}
                   />
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <label className="caption block mb-1" style={{ color: 'var(--muted-foreground)' }}>Source</label>
                     <input
@@ -917,7 +917,7 @@ export function CompanyDetail() {
 
           {/* F-26 PDF Export */}
           <div
-            className="p-4 rounded-xl border flex items-center justify-between"
+            className="p-4 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
             style={{ background: 'var(--card)', borderColor: 'var(--border)', borderRadius: 'var(--radius-card)' }}
           >
             <div>

@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import {
   Search,
-  SlidersHorizontal,
   Star,
   ChevronUp,
   ChevronDown,
@@ -79,9 +78,9 @@ export function TriageDashboard() {
   const topRisk = filtered.filter(c => c.riskTier === 'critical' || c.riskTier === 'high').slice(0, 3);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div>
           <h1 style={{ fontFamily: 'var(--text-h1-family)', fontSize: 'var(--text-h1-size)', color: 'var(--foreground)' }}>
             Triage Dashboard
@@ -90,7 +89,7 @@ export function TriageDashboard() {
             Risk-ranked screening of {SECTOR_STATS.totalCompanies} IDX-listed companies · Updated March 2026
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="shrink-0">
           <div
             className="px-3 py-1.5 rounded caption"
             style={{ background: 'var(--card)', border: '1px solid var(--border)', color: 'var(--muted-foreground)', borderRadius: 'var(--radius)' }}
@@ -101,7 +100,7 @@ export function TriageDashboard() {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
           { label: 'Critical Risk', value: SECTOR_STATS.criticalCount, tier: 'critical' as RiskTier, sub: 'Escalate to formal audit' },
           { label: 'High Risk', value: SECTOR_STATS.highCount, tier: 'high' as RiskTier, sub: 'Recommend screening' },
@@ -139,7 +138,7 @@ export function TriageDashboard() {
               Priority for Review
             </h3>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {topRisk.map(company => (
               <button
                 key={company.id}
@@ -204,7 +203,7 @@ export function TriageDashboard() {
           </div>
           <button
             onClick={() => setShowFilters(f => !f)}
-            className="flex items-center gap-2 px-3 py-2 rounded"
+            className="flex items-center gap-2 px-3 py-2 rounded shrink-0"
             style={{
               background: showFilters ? 'var(--accent)' : 'var(--input-background)',
               border: '1px solid var(--border)',
@@ -213,7 +212,7 @@ export function TriageDashboard() {
             }}
           >
             <Filter size={14} />
-            <span>Filters</span>
+            <span className="hidden sm:inline">Filters</span>
             {(filterTier !== 'all' || filterMethod !== 'all') && (
               <span
                 className="caption w-4 h-4 flex items-center justify-center rounded-full"
@@ -226,10 +225,10 @@ export function TriageDashboard() {
         </div>
 
         {showFilters && (
-          <div className="flex items-center gap-4 mt-3 pt-3 border-t" style={{ borderColor: 'var(--border)' }}>
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 mt-3 pt-3 border-t" style={{ borderColor: 'var(--border)' }}>
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="caption" style={{ color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>Risk tier:</span>
-              <div className="flex gap-1">
+              <div className="flex gap-1 flex-wrap">
                 <button
                   onClick={() => setFilterTier('all')}
                   className="caption px-2.5 py-1 rounded"
@@ -255,8 +254,8 @@ export function TriageDashboard() {
                 ))}
               </div>
             </div>
-            <div className="w-px h-5" style={{ background: 'var(--border)' }} />
-            <div className="flex items-center gap-2">
+            <div className="hidden sm:block w-px h-5" style={{ background: 'var(--border)' }} />
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="caption" style={{ color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>Method:</span>
               <div className="flex gap-1 flex-wrap">
                 <button
@@ -293,71 +292,175 @@ export function TriageDashboard() {
         className="rounded-xl border overflow-hidden"
         style={{ background: 'var(--card)', borderColor: 'var(--border)', borderRadius: 'var(--radius-card)' }}
       >
-        {/* Table Header */}
-        <div
-          className="grid items-center px-4 py-3 border-b"
-          style={{
-            gridTemplateColumns: '2.5rem 1fr 8rem 7rem 7rem 7rem 6rem 5rem',
-            borderColor: 'var(--border)',
-          }}
-        >
-          {[
-            { key: null, label: '#' },
-            { key: 'name' as SortKey, label: 'Company' },
-            { key: 'sector' as SortKey, label: 'Sector' },
-            { key: 'riskScore' as SortKey, label: 'Risk Score' },
-            { key: 'etr' as SortKey, label: 'ETR (2023)' },
-            { key: null, label: 'Method' },
-            { key: null, label: 'Status' },
-            { key: null, label: '' },
-          ].map(({ key, label }, i) => (
-            <button
-              key={i}
-              onClick={() => key && handleSort(key)}
-              className={`flex items-center gap-1 caption ${key ? 'cursor-pointer hover:text-white' : 'cursor-default'}`}
-              style={{ color: key && sortKey === key ? 'var(--foreground)' : 'var(--muted-foreground)' }}
-            >
-              {label}
-              {key && sortKey === key && (
-                sortDir === 'asc' ? <ChevronUp size={11} /> : <ChevronDown size={11} />
-              )}
-            </button>
-          ))}
+        {/* Desktop table — hidden on mobile */}
+        <div className="hidden md:block overflow-x-auto">
+          {/* Table Header */}
+          <div
+            className="grid items-center px-4 py-3 border-b"
+            style={{
+              gridTemplateColumns: '2.5rem 1fr 8rem 7rem 7rem 7rem 6rem 5rem',
+              borderColor: 'var(--border)',
+              minWidth: '720px',
+            }}
+          >
+            {[
+              { key: null, label: '#' },
+              { key: 'name' as SortKey, label: 'Company' },
+              { key: 'sector' as SortKey, label: 'Sector' },
+              { key: 'riskScore' as SortKey, label: 'Risk Score' },
+              { key: 'etr' as SortKey, label: 'ETR (2023)' },
+              { key: null, label: 'Method' },
+              { key: null, label: 'Status' },
+              { key: null, label: '' },
+            ].map(({ key, label }, i) => (
+              <button
+                key={i}
+                onClick={() => key && handleSort(key)}
+                className={`flex items-center gap-1 caption ${key ? 'cursor-pointer hover:text-white' : 'cursor-default'}`}
+                style={{ color: key && sortKey === key ? 'var(--foreground)' : 'var(--muted-foreground)' }}
+              >
+                {label}
+                {key && sortKey === key && (
+                  sortDir === 'asc' ? <ChevronUp size={11} /> : <ChevronDown size={11} />
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Table Rows */}
+          <div style={{ minWidth: '720px' }}>
+            {filtered.map((company, idx) => {
+              const lastFY = company.financials.at(-1)!;
+              return (
+                <button
+                  key={company.id}
+                  onClick={() => navigate(`/company/${company.id}`)}
+                  className="w-full grid items-center px-4 py-3 border-b text-left transition-colors hover:bg-white/[0.03]"
+                  style={{
+                    gridTemplateColumns: '2.5rem 1fr 8rem 7rem 7rem 7rem 6rem 5rem',
+                    borderColor: 'var(--border)',
+                  }}
+                >
+                  {/* Rank */}
+                  <span className="caption" style={{ color: 'var(--muted-foreground)' }}>
+                    {idx + 1}
+                  </span>
+
+                  {/* Company */}
+                  <div className="min-w-0 pr-4">
+                    <div className="flex items-center gap-2">
+                      {company.isWatchlisted && (
+                        <Star size={12} fill="var(--primary)" color="var(--primary)" />
+                      )}
+                      <span style={{ fontFamily: 'var(--text-p-family)', fontSize: '14px', color: 'var(--foreground)', fontWeight: 500 }}>
+                        {company.ticker}
+                      </span>
+                      {company.alerts.length > 0 && (
+                        <span
+                          className="caption px-1.5 rounded"
+                          style={{ background: 'rgba(191,77,67,0.15)', color: 'var(--destructive)', borderRadius: 'var(--radius-sm)' }}
+                        >
+                          {company.alerts.length} alert{company.alerts.length > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
+                    <div className="caption truncate mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+                      {company.name}
+                    </div>
+                  </div>
+
+                  {/* Sector */}
+                  <span className="caption truncate" style={{ color: 'var(--muted-foreground)' }}>
+                    {company.sector}
+                  </span>
+
+                  {/* Risk Score */}
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="h-1.5 rounded-full overflow-hidden flex-1 max-w-[60px]"
+                      style={{ background: 'var(--muted)' }}
+                    >
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${company.riskScore}%`,
+                          background: getRiskColor(company.riskTier),
+                        }}
+                      />
+                    </div>
+                    <span style={{ fontFamily: 'var(--text-p-family)', fontSize: '14px', color: getRiskColor(company.riskTier), fontWeight: 500 }}>
+                      {company.riskScore}
+                    </span>
+                  </div>
+
+                  {/* ETR */}
+                  <span style={{
+                    fontFamily: 'var(--text-p-family)',
+                    fontSize: '14px',
+                    color: lastFY.etr < 12 ? 'var(--destructive)' : lastFY.etr < 20 ? '#D4A017' : 'var(--foreground)',
+                    fontWeight: lastFY.etr < 20 ? 500 : 400,
+                  }}>
+                    {lastFY.etr.toFixed(1)}%
+                    {lastFY.etr < 22 && (
+                      <TrendingDown size={11} className="inline ml-1" style={{ color: lastFY.etr < 12 ? 'var(--destructive)' : '#D4A017' }} />
+                    )}
+                  </span>
+
+                  {/* Methods */}
+                  <div className="flex gap-1 flex-wrap">
+                    {company.avoidanceMethods.slice(0, 2).map(m => (
+                      <span
+                        key={m}
+                        className="caption px-1.5 py-0.5 rounded"
+                        style={{
+                          background: 'rgba(32,127,222,0.12)',
+                          color: 'var(--accent)',
+                          border: '1px solid rgba(32,127,222,0.2)',
+                          borderRadius: 'var(--radius-sm)',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {m === 'transfer_pricing' ? 'TP' : m === 'debt_shifting' ? 'DS' : m === 'royalty_stripping' ? 'RS' : 'SL'}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Status */}
+                  <RiskBadge tier={company.riskTier} size="sm" />
+
+                  {/* Arrow */}
+                  <div className="flex justify-end">
+                    <ArrowUpRight size={14} style={{ color: 'var(--muted-foreground)' }} />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Table Rows */}
-        <div>
+        {/* Mobile card list — hidden on md+ */}
+        <div className="md:hidden divide-y" style={{ borderColor: 'var(--border)' }}>
           {filtered.map((company, idx) => {
             const lastFY = company.financials.at(-1)!;
             return (
               <button
                 key={company.id}
                 onClick={() => navigate(`/company/${company.id}`)}
-                className="w-full grid items-center px-4 py-3 border-b text-left transition-colors hover:bg-white/[0.03]"
-                style={{
-                  gridTemplateColumns: '2.5rem 1fr 8rem 7rem 7rem 7rem 6rem 5rem',
-                  borderColor: 'var(--border)',
-                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/[0.03] transition-colors"
+                style={{ borderBottom: '1px solid var(--border)' }}
               >
-                {/* Rank */}
-                <span className="caption" style={{ color: 'var(--muted-foreground)' }}>
+                <span className="caption w-5 shrink-0 text-center" style={{ color: 'var(--muted-foreground)' }}>
                   {idx + 1}
                 </span>
-
-                {/* Company */}
-                <div className="min-w-0 pr-4">
-                  <div className="flex items-center gap-2">
-                    {company.isWatchlisted && (
-                      <Star size={12} fill="var(--primary)" color="var(--primary)" />
-                    )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {company.isWatchlisted && <Star size={11} fill="var(--primary)" color="var(--primary)" />}
                     <span style={{ fontFamily: 'var(--text-p-family)', fontSize: '14px', color: 'var(--foreground)', fontWeight: 500 }}>
                       {company.ticker}
                     </span>
+                    <RiskBadge tier={company.riskTier} size="sm" />
                     {company.alerts.length > 0 && (
-                      <span
-                        className="caption px-1.5 rounded"
-                        style={{ background: 'rgba(191,77,67,0.15)', color: 'var(--destructive)', borderRadius: 'var(--radius-sm)' }}
-                      >
+                      <span className="caption" style={{ color: 'var(--destructive)' }}>
                         {company.alerts.length} alert{company.alerts.length > 1 ? 's' : ''}
                       </span>
                     )}
@@ -365,69 +468,17 @@ export function TriageDashboard() {
                   <div className="caption truncate mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
                     {company.name}
                   </div>
-                </div>
-
-                {/* Sector */}
-                <span className="caption truncate" style={{ color: 'var(--muted-foreground)' }}>
-                  {company.sector}
-                </span>
-
-                {/* Risk Score */}
-                <div className="flex items-center gap-2">
-                  <div
-                    className="h-1.5 rounded-full overflow-hidden flex-1 max-w-[60px]"
-                    style={{ background: 'var(--muted)' }}
-                  >
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${company.riskScore}%`,
-                        background: getRiskColor(company.riskTier),
-                      }}
-                    />
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="caption" style={{ color: lastFY.etr < 12 ? 'var(--destructive)' : 'var(--muted-foreground)' }}>
+                      ETR {lastFY.etr.toFixed(1)}%
+                    </span>
+                    <span className="caption" style={{ color: 'var(--muted-foreground)' }}>{company.sector}</span>
                   </div>
-                  <span style={{ fontFamily: 'var(--text-p-family)', fontSize: '14px', color: getRiskColor(company.riskTier), fontWeight: 500 }}>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span style={{ fontFamily: 'var(--text-p-family)', fontSize: '16px', color: getRiskColor(company.riskTier), fontWeight: 500 }}>
                     {company.riskScore}
                   </span>
-                </div>
-
-                {/* ETR */}
-                <span style={{
-                  fontFamily: 'var(--text-p-family)',
-                  fontSize: '14px',
-                  color: lastFY.etr < 12 ? 'var(--destructive)' : lastFY.etr < 20 ? '#D4A017' : 'var(--foreground)',
-                  fontWeight: lastFY.etr < 20 ? 500 : 400,
-                }}>
-                  {lastFY.etr.toFixed(1)}%
-                  {lastFY.etr < 22 && (
-                    <TrendingDown size={11} className="inline ml-1" style={{ color: lastFY.etr < 12 ? 'var(--destructive)' : '#D4A017' }} />
-                  )}
-                </span>
-
-                {/* Methods */}
-                <div className="flex gap-1 flex-wrap">
-                  {company.avoidanceMethods.slice(0, 2).map(m => (
-                    <span
-                      key={m}
-                      className="caption px-1.5 py-0.5 rounded"
-                      style={{
-                        background: 'rgba(32,127,222,0.12)',
-                        color: 'var(--accent)',
-                        border: '1px solid rgba(32,127,222,0.2)',
-                        borderRadius: 'var(--radius-sm)',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {m === 'transfer_pricing' ? 'TP' : m === 'debt_shifting' ? 'DS' : m === 'royalty_stripping' ? 'RS' : 'SL'}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Status */}
-                <RiskBadge tier={company.riskTier} size="sm" />
-
-                {/* Arrow */}
-                <div className="flex justify-end">
                   <ArrowUpRight size={14} style={{ color: 'var(--muted-foreground)' }} />
                 </div>
               </button>
@@ -443,11 +494,11 @@ export function TriageDashboard() {
         )}
 
         {/* Footer */}
-        <div className="px-4 py-3 flex items-center justify-between">
+        <div className="px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
           <span className="caption" style={{ color: 'var(--muted-foreground)' }}>
             Showing {filtered.length} of {MOCK_COMPANIES.length} companies (demo dataset)
           </span>
-          <span className="caption" style={{ color: 'var(--muted-foreground)' }}>
+          <span className="caption hidden md:inline" style={{ color: 'var(--muted-foreground)' }}>
             TP = Transfer Pricing · DS = Debt Shifting · RS = Royalty Stripping · SL = Shell Layering
           </span>
         </div>
