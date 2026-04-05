@@ -230,9 +230,9 @@ cd satria-frontend
 # Install frontend dependencies
 npm install
 
-# Optional: point the frontend to a separate backend origin
+# Optional: copy environment variables for overrides
 cp .env.example .env
-# In local development, leave VITE_API_BASE_URL unset to use the Vite proxy
+# In local development, leave both values commented out to use localhost:5000
 
 # Start the frontend dev server
 npm run dev
@@ -241,14 +241,14 @@ npm run dev
 ### Backend connection modes
 
 ```bash
-# Option 1: localhost development against the Render backend (recommended)
-# Leave VITE_API_BASE_URL unset and Vite will proxy /api/* to https://backend-satria.onrender.com
+# Option 1: localhost development against a local backend (recommended)
+# Leave VITE_API_BASE_URL unset and Vite will proxy /api/* to http://localhost:5000
 
-# Option 2: direct browser calls to the hosted backend
+# Option 2: direct browser calls to the hosted production backend
 VITE_API_BASE_URL=https://backend-satria.onrender.com
 
 # Option 3: override the dev proxy target
-VITE_DEV_PROXY_TARGET=http://localhost:8000
+VITE_DEV_PROXY_TARGET=http://localhost:5000
 ```
 
 ---
@@ -261,7 +261,7 @@ VITE_DEV_PROXY_TARGET=http://localhost:8000
 VITE_API_BASE_URL=https://backend-satria.onrender.com
 
 # Optional override for the localhost dev proxy target.
-VITE_DEV_PROXY_TARGET=https://backend-satria.onrender.com
+VITE_DEV_PROXY_TARGET=http://localhost:5000
 ```
 
 ---

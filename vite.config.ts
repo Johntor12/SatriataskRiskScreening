@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
 const devProxyTarget =
-  process.env.VITE_DEV_PROXY_TARGET?.trim() || 'https://backend-satria.onrender.com'
+  process.env.VITE_DEV_PROXY_TARGET?.trim() || 'http://localhost:5000'
 
 export default defineConfig({
   plugins: [
@@ -24,7 +24,6 @@ export default defineConfig({
       '/api': {
         target: devProxyTarget,
         changeOrigin: true,
-        secure: true,
       },
     },
   },
